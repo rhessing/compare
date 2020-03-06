@@ -1,0 +1,66 @@
+{
+  "name": "pelias-compare",
+  "version": "0.1.5",
+  "author": "pelias",
+  "description": "Pelias geocoder frontend comparison and debugging tool",
+  "homepage": "https://github.com/pelias/compare",
+  "license": "MIT",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build  --dest docs/ src/main.ts",
+    "build:api": "vue-cli-service build --dest dist-api/ src/main-api.ts",
+    "build:spa": "SPA_MODE=true vue-cli-service build  --dest spa/ src/main-spa.ts",
+    "lint": "vue-cli-service lint",
+    "prepublishOnly": "npm run build:api"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-brands-svg-icons": "^5.12.1",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
+    "@johmun/vue-tags-input": "^2.1.0",
+    "@types/leaflet": "^1.5.9",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@vue/cli-plugin-babel": "^4.2.0",
+    "@vue/cli-plugin-eslint": "^4.2.0",
+    "@vue/cli-plugin-router": "^4.2.0",
+    "@vue/cli-plugin-typescript": "^4.2.0",
+    "@vue/cli-service": "^4.2.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/eslint-config-typescript": "^5.0.1",
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.5.0",
+    "core-js": "^3.6.4",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-vue": "^6.1.2",
+    "font-awesome": "^4.7.0",
+    "leaflet": "^1.6.0",
+    "lint-staged": "^9.5.0",
+    "regenerator-runtime": "^0.13.3",
+    "sass": "^1.25.0",
+    "sass-loader": "^8.0.2",
+    "typescript": "~3.7.5",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.2",
+    "vue-property-decorator": "^8.3.0",
+    "vue-template-compiler": "^2.6.11",
+    "vue2-leaflet": "^2.5.2"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  },
+  "files": [
+    "dist-api"
+  ],
+  "dependencies": {
+    "@types/geojson": "^7946.0.7"
+  }
+}
