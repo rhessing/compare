@@ -41,6 +41,7 @@
   display: none;
 }
 
+
 .rounded {
   position: relative;
 }
@@ -146,7 +147,7 @@ import ResultsSummary from './ResultsSummary.vue';
 function parseHTML(s: string) {
   const tmp = document.implementation.createHTMLDocument();
   tmp.body.innerHTML = s;
-  return tmp.body.children;
+  return tmp.body.children[0];
 }
 
 function renderjsonReplacer(key: string, value: string) {
