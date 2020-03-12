@@ -268,7 +268,6 @@ export default class CompareView extends Vue {
   }
 
   parseQuery(query: string) {
-    console.log('parsing: ', query);
     const parts = query.split('?');
     // eslint-disable-next-line prefer-destructuring
     this.endpoint = parts[0];
@@ -427,7 +426,6 @@ export default class CompareView extends Vue {
   }
 
   set prettyQueryPath(humanReadablePath: string) {
-    console.log('perrry', humanReadablePath);
     this.parseQuery(humanReadablePath);
     this.onChange();
     this.queryPath = humanReadablePath;
