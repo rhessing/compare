@@ -62,6 +62,7 @@
     "dist-api"
   ],
   "dependencies": {
-    "@types/geojson": "^7946.0.7"
+    "@types/geojson": "^7946.0.7",
+    "lodash": "^4.17.15"
   }
 }
