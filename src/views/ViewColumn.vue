@@ -41,7 +41,6 @@
   display: none;
 }
 
-
 .rounded {
   position: relative;
 }
@@ -52,10 +51,17 @@
   margin-top: 11px;
 }
 
-.copyJson {
+.copyButtons {
   position: absolute;
   right: 10px;
   top: 15px;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.copyButtons button:not(:first-child) {
+  margin-top: 5px;
 }
 
 .hiddenCopy {
@@ -110,7 +116,10 @@
     </div>
 
     <div class="assertion shadow rounded" v-if="body" style="margin-top:-10px;">
-      <div class="copyJson"><b-button @click="copyJson">Copy JSON</b-button></div>
+      <div class="copyButtons">
+        <b-button class="copyJson" @click="copyJson">Copy JSON</b-button>
+        <b-button class="copyEsQuery" v-if="esQuery" @click="copyEsQuery">Copy ES Query</b-button>
+      </div>
       <div class="renderedJson" ref="renderedJson"></div>
     </div>
     <div class="hiddenCopy"><textarea ref="hiddenCopyInput"></textarea></div>
@@ -141,9 +150,8 @@ import '@/vendor/leaflet.awesome-markers.css';
 
 import ResultsSummary from './ResultsSummary.vue';
 
-[
-  faWeebly, faDotCircle, faMapSigns, faLanguage, faMap, faObjectUngroup,
-].forEach((i) => library.add(i));
+const icons = [faWeebly, faDotCircle, faMapSigns, faLanguage, faMap, faObjectUngroup];
+icons.forEach((i) => library.add(i));
 
 function parseHTML(s: string) {
   const tmp = document.implementation.createHTMLDocument();
@@ -241,7 +249,8 @@ export default class ViewColumn extends Vue {
 
   // url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-  attribution = '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+  attribution =
+    '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
   centerFeatures(features: GeoJSON.FeatureCollection) {
     const geoJsonLayer = L.geoJSON(features);
@@ -387,10 +396,10 @@ export default class ViewColumn extends Vue {
     return ((this.$refs.mymap as unknown) as { mapObject: L.Map }).mapObject;
   }
 
-  copyJson() {
+  copyHelper(stringToCopy: string, copyName: string) {
     /* Get the text field */
     const copyText = this.$refs.hiddenCopyInput as HTMLInputElement;
-    copyText.value = JSON.stringify(this.body, null, 4);
+    copyText.value = JSON.stringify(stringToCopy, null, 4);
 
     /* Select the text field */
     copyText.select();
@@ -400,13 +409,31 @@ export default class ViewColumn extends Vue {
     document.execCommand('copy');
 
     /* Alert the copied text */
-    this.$bvToast.toast('JSON response copied to clipboard', {
+    this.$bvToast.toast(`${copyName} copied to clipboard`, {
       title: 'Status',
       autoHideDelay: 1000,
       appendToast: true,
       variant: 'success',
       toaster: 'b-toaster-bottom-center',
     });
+  }
+
+  copyJson() {
+    this.copyHelper(this.body, 'JSON Response');
+  }
+
+  copyEsQuery() {
+    this.copyHelper(this.esQuery, 'ES Query');
+  }
+
+  get esQuery() {
+    const esReqEntries = this.body?.geocoding?.debug
+      ?.map((debugEntry: Record<string, any>) => (debugEntry['controller:search'] || {}).ES_req?.body)
+      .filter((e: any) => Boolean(e));
+    if (esReqEntries) {
+      return esReqEntries[0];
+    }
+    return '';
   }
 }
 </script>

@@ -1,6 +1,6 @@
 {
   "name": "pelias-compare",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "author": "pelias",
   "description": "Pelias geocoder frontend comparison and debugging tool",
   "homepage": "https://github.com/pelias/compare",
@@ -63,7 +63,7 @@
   ],
   "dependencies": {
     "@types/geojson": "^7946.0.7",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.150",
     "lodash": "^4.17.15"
   }
 }
