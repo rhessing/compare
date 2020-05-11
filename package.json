@@ -1,6 +1,6 @@
 {
   "name": "pelias-compare",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "author": "pelias",
   "description": "Pelias geocoder frontend comparison and debugging tool",
   "homepage": "https://github.com/pelias/compare",
