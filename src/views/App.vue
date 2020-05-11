@@ -58,7 +58,7 @@ label {
           <div style="display: flex">
             <b-form-input
               id="input-point"
-              placeholder="latitude, longitude"
+              placeholder="longitude, latitude"
               v-model="pointStr"
               @change="onPointChange"
               :required="isPointRequired"
