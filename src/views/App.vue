@@ -296,7 +296,7 @@ export default class CompareView extends Vue {
 
       const latlng = new L.LatLng(parseFloat(lat.trim()), parseFloat(lon.trim()));
 
-      this.pointStr = `${latlng.lat},${latlng.lng}`;
+      this.pointStr = `${latlng.lng},${latlng.lat}`;
 
       return latlng;
     };
@@ -579,6 +579,8 @@ export default class CompareView extends Vue {
       this.point = new L.LatLng(crd.latitude, crd.longitude);
       this.pointStr = `${this.point.lng},${this.point.lat}`;
       this.onChange();
+    }, (error: any) => {
+      this.isDoingGeolocation = false;
     });
   }
 }
