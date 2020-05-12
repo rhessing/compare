@@ -265,6 +265,13 @@ export default class ViewColumn extends Vue {
   }
 
   mounted() {
+    // jawg url is specified with "//" which fails when loading built index.html
+    // as a file
+    if (window.location.protocol === 'file:' && !this.url.includes('http:')) {
+      this.url = `http:${this.url}`;
+    }
+
+
     renderjson.set_replacer(renderjsonReplacer);
     renderjson.set_show_to_level('all');
 
