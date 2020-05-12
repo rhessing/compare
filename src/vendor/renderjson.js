@@ -106,7 +106,6 @@ var A = function A(txt, classname, callback) {
   a.appendChild(text(txt));
   a.href = "#";
   a.onclick = function(e) {
-    console.log(e);
     if (e) e.stopPropagation();
     if (e) e.preventDefault();
     callback();
@@ -115,7 +114,20 @@ var A = function A(txt, classname, callback) {
   return a;
 };
 
-function _renderjson(json, indent, dont_indent, show_level, options) {
+function _renderjson(json, indent, dont_indent, show_level, options, path) {
+  const el = _renderjsonhelper(json, indent, dont_indent, show_level, options, path);
+  const wrapper = span("")
+  wrapper.id = path;
+  if (Array.isArray(el)) {
+    el.forEach((e) => wrapper.appendChild(e));
+  } else {
+    wrapper.appendChild(el);
+  }
+  return wrapper;
+}
+
+
+function _renderjsonhelper(json, indent, dont_indent, show_level, options, path) {
   var my_indent = dont_indent ? "" : indent;
 
   var disclosure = function(open, placeholder, close, type, builder) {
@@ -180,7 +192,8 @@ function _renderjson(json, indent, dont_indent, show_level, options) {
             indent + "    ",
             false,
             show_level - 1,
-            options
+            options,
+            path + '.' + i
           ),
           i != json.length - 1 ? themetext("syntax", ",") : [],
           text("\n")
@@ -191,7 +204,7 @@ function _renderjson(json, indent, dont_indent, show_level, options) {
   }
 
   if (json instanceof HTMLElement) {
-    return json;
+    return append(span("json"),  text(my_indent), json);
   }
 
   // object
@@ -214,7 +227,8 @@ function _renderjson(json, indent, dont_indent, show_level, options) {
           indent + "    ",
           true,
           show_level - 1,
-          options
+          options,
+          path + '.' + k
         ),
         k != last ? themetext("syntax", ",") : [],
         text("\n")
@@ -225,7 +239,7 @@ function _renderjson(json, indent, dont_indent, show_level, options) {
   });
 };
 
-export default function renderjson(json) {
+export default function renderjson(json, idPrefix) {
   var options = new Object(renderjson.options);
   options.replacer =
     typeof options.replacer == "function"
@@ -235,7 +249,7 @@ export default function renderjson(json) {
         };
   var pre = append(
     document.createElement("pre"),
-    _renderjson(json, "", false, options.show_to_level, options)
+    _renderjson(json, "", false, options.show_to_level, options, idPrefix || 'renderjson')
   );
   pre.className = "renderjson";
   return pre;
