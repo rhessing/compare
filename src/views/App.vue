@@ -161,7 +161,7 @@ label {
       />
     </b-modal>
 
-    <back-to-top text="Back to top"></back-to-top>
+    <back-to-top text="Scroll to top"></back-to-top>
   </b-container>
 </template>
 
