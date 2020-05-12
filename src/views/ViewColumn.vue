@@ -383,10 +383,39 @@ export default class ViewColumn extends Vue {
     this.getMap().addLayer(bboxLayer);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getZoomLevelForLayer(layer: string) {
+    switch (layer) {
+      case 'locality':
+      case 'localadmin':
+      case 'neighbourhood':
+      case 'borough':
+      case 'county':
+      case 'macrocounty':
+        return 10;
+      case 'region':
+      case 'macroregion':
+      case 'country':
+        return 6;
+      case 'venue':
+      case 'address':
+      case 'mixed':
+      case 'street':
+        return 12;
+      default:
+        return 6;
+    }
+  }
+
   featureClicked(feature: GeoJSON.Feature) {
     const geojson = L.geoJSON(feature);
     const bounds = geojson.getBounds();
-    this.getMap().setView(bounds.getCenter(), 6);
+
+    if (feature.geometry.type === 'Point') {
+      this.getMap().setView(bounds.getCenter(), this.getZoomLevelForLayer(feature.properties?.layer || ''));
+    } else {
+      this.getMap().fitBounds(bounds);
+    }
   }
 
   getMap(): L.Map {
