@@ -9,7 +9,7 @@
       <span class="icon">
         <font-awesome-icon :icon="iconForLayer(feature.properties.layer)" />
       </span>
-      {{ feature.properties.label }}
+      <span class="label">{{ feature.properties.label }}</span>
     </li>
   </ul>
 </template>
@@ -114,18 +114,18 @@ export default class ResultsSummary extends Vue {
   min-height: 2em;
 }
 
-.summary ul,
-.summary ul li {
-  margin: 0;
-  padding: 0;
+ul.summary,
+.summary li {
   list-style: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+  line-height: 1.4;
 }
 
-.summary ul {
-  margin-left: -5px;
+ul.summary :hover {
+  text-decoration: underline;
 }
 
 .summary p.error {
