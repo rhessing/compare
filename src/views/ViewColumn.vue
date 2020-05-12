@@ -93,7 +93,7 @@
 
     <div class="response shadow">
       <h4 class="code-title code-title-silver rounded">
-        <span class="title">&nbsp;{{ host }}</span>
+        <span class="title">&nbsp;<a :href="url">{{ host }}</a></span>
       </h4>
       <div class="code rounded" v-if="body.features && body.features.length">
         <ResultsSummary :features="body.features" v-on:feature-clicked="featureClicked" />
@@ -111,7 +111,7 @@
         ref="mymap"
         :options="{ scrollWheelZoom: false }"
       >
-        <l-tile-layer :url="url" :attribution="attribution" />
+        <l-tile-layer :url="tileUrl" :attribution="attribution" />
       </l-map>
     </div>
 
@@ -235,6 +235,8 @@ const markers = {
 export default class ViewColumn extends Vue {
   @Prop() private body!: any;
 
+  @Prop() private url!: string;
+
   @Prop() private numHosts!: number;
 
   @Prop() private host!: string;
@@ -245,7 +247,7 @@ export default class ViewColumn extends Vue {
 
   center = latLng(47.41322, -1.219482);
 
-  url = '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
+  tileUrl = '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
 
   attribution = 'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>';
 
@@ -267,8 +269,8 @@ export default class ViewColumn extends Vue {
   mounted() {
     // jawg url is specified with "//" which fails when loading built index.html
     // as a file
-    if (window.location.protocol === 'file:' && !this.url.includes('http:')) {
-      this.url = `http:${this.url}`;
+    if (window.location.protocol === 'file:' && !this.tileUrl.includes('http:')) {
+      this.tileUrl = `http:${this.tileUrl}`;
     }
 
 

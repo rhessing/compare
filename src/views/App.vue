@@ -145,6 +145,7 @@ label {
       <ViewColumn
         v-for="response in responses"
         :key="response.url"
+        :url="response.url"
         :body="response.body"
         :host="response.host"
         :numHosts="hosts.length"
