@@ -285,8 +285,10 @@ export default class ViewColumn extends Vue {
 
     // pad bounds to the marker fit on screen
     try {
-      bounds = bounds.pad(0.5);
-      this.getMap().fitBounds(bounds);
+      if (bounds) {
+        bounds = bounds.pad(0.5);
+        this.getMap().fitBounds(bounds);
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
