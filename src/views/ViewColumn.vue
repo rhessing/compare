@@ -124,7 +124,7 @@
         ref="mymap"
         :options="{ scrollWheelZoom: false }"
       >
-        <l-tile-layer :url="tileUrl" :attribution="attribution" />
+        <l-tile-layer :url="mapConfig.tileUrl" :attribution="mapConfig.attribution" />
       </l-map>
     </div>
 
@@ -167,6 +167,7 @@ import AwesomeMarkers from '@/vendor/leaflet.awesome-markers';
 import '@/vendor/leaflet.awesome-markers.css';
 
 import ResultsSummary from './ResultsSummary.vue';
+import { MapConfig } from '../map-config';
 
 const icons = [faWeebly, faDotCircle, faMapSigns, faLanguage, faMap, faObjectUngroup];
 icons.forEach((i) => library.add(i));
@@ -259,17 +260,13 @@ export default class ViewColumn extends Vue {
 
   @Prop() private host!: string;
 
+  @Prop() private mapConfig!: MapConfig;
+
   private renderedJson: any = null;
 
   private summary = '';
 
   center = latLng(47.41322, -1.219482);
-
-  tileUrl =
-    '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
-
-  attribution =
-    'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>';
 
   centerFeatures(features: GeoJSON.FeatureCollection) {
     const geoJsonLayer = L.geoJSON(features);
@@ -289,12 +286,6 @@ export default class ViewColumn extends Vue {
   }
 
   mounted() {
-    // jawg url is specified with "//" which fails when loading built index.html
-    // as a file
-    if (window.location.protocol === 'file:' && !this.tileUrl.includes('http:')) {
-      this.tileUrl = `http:${this.tileUrl}`;
-    }
-
     renderjson.set_replacer(renderjsonReplacer);
     renderjson.set_show_to_level('all');
 

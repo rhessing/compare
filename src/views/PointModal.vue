@@ -7,7 +7,7 @@
       @click="addMarker"
       ref="mymap"
     >
-      <l-tile-layer :url="url" :attribution="attribution" />
+      <l-tile-layer :url="mapConfig.tileUrl" :attribution="mapConfig.attribution" />
       <l-marker :lat-lng="pointLatLng" v-if="pointLatLng"> </l-marker>
     </l-map>
   </div>
@@ -18,21 +18,21 @@ import {
 } from 'vue-property-decorator';
 import { latLng } from 'leaflet';
 
+import { MapConfig } from '../map-config';
+
 @Component({})
 export default class PointView extends Vue {
   zoom = 5;
 
   defaultCenter = latLng(47.41322, -1.219482);
 
-  url = '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
-
-  attribution = 'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>';
-
   pointLatLng: L.LatLng | null = null;
 
   @Prop() lat!: number | null;
 
   @Prop() lng!: number | null;
+
+  @Prop() private mapConfig!: MapConfig;
 
   mounted() {
     if (this.lat && this.lng) {

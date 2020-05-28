@@ -162,6 +162,7 @@ label {
         :body="response.body"
         :host="response.host"
         :numHosts="hosts.length"
+        :mapConfig="mapConfig"
       />
     </b-row>
 
@@ -171,6 +172,7 @@ label {
         :lat="pointLat"
         :lng="pointLng"
         v-on:point-changed="updatePoint"
+        :mapConfig="mapConfig"
       />
     </b-modal>
 
@@ -188,20 +190,20 @@ import { faMap, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
 import BackToTop from 'vue-backtotop';
 
-import * as L from 'leaflet';
-
 /* eslint-disable global-require */
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
-// app.js
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+import * as L from 'leaflet';
 import { Icon } from 'leaflet';
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import '../../node_modules/leaflet/dist/leaflet.css';
+
 import ViewColumn from './ViewColumn.vue';
 import PointModal from './PointModal.vue';
-import '../../node_modules/leaflet/dist/leaflet.css';
+import { MapConfig } from '../map-config';
 
 import '../main.css';
 
@@ -251,6 +253,8 @@ export default class CompareView extends Vue {
   @Prop() private isBuiltForApi!: boolean;
 
   @Prop() private isBuiltForSpa!: boolean;
+
+  @Prop() private mapConfig!: MapConfig;
 
   ids: string | null = '';
 
