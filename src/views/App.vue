@@ -313,25 +313,7 @@ export default class CompareView extends Vue {
     this.extraParams = params.toString();
   }
 
-  created() {
-    // ugh, for historical reasons, we save these in local storage as "endpoints"
-    const hosts = window.localStorage.getItem('endpoints');
-    window.console.info('loaded from localStorage:', (hosts || '').split(',').join(', '));
-    if (typeof hosts === 'string') {
-      if (hosts !== '') {
-        this.hosts = createTags(hosts.split(','));
-      }
-    } else {
-      window.localStorage.setItem('endpoints', '');
-    }
-    if (this.hosts.length === 0) {
-      if (this.isBuiltForApi) {
-        this.hosts = createTags([`${window.location.protocol}//${window.location.host}`]);
-      } else {
-        this.hosts = createTags(['https://api.geocode.earth', 'https://api.dev.geocode.earth']);
-      }
-    }
-
+  parseHash() {
     // If we're running in non-SPA mode with routing like
     // http://blackmad.github.io/pelias-compare/index.html#/v1/search?text=....
     let hash = window.location.hash.substr(1);
@@ -358,6 +340,32 @@ export default class CompareView extends Vue {
         this.onSubmit();
       }
     }
+  }
+
+  created() {
+    // ugh, for historical reasons, we save these in local storage as "endpoints"
+    const hosts = window.localStorage.getItem('endpoints');
+    window.console.info('loaded from localStorage:', (hosts || '').split(',').join(', '));
+    if (typeof hosts === 'string') {
+      if (hosts !== '') {
+        this.hosts = createTags(hosts.split(','));
+      }
+    } else {
+      window.localStorage.setItem('endpoints', '');
+    }
+    if (this.hosts.length === 0) {
+      if (this.isBuiltForApi) {
+        this.hosts = createTags([`${window.location.protocol}//${window.location.host}`]);
+      } else {
+        this.hosts = createTags(['https://api.geocode.earth', 'https://api.dev.geocode.earth']);
+      }
+    }
+
+    this.parseHash();
+
+    window.addEventListener('hashchange', () => {
+      this.parseHash();
+    }, false);
   }
 
   getParams() {
@@ -412,10 +420,12 @@ export default class CompareView extends Vue {
 
     this.queryPath = `${this.endpoint}?${params.toString()}`;
     if (this.isBuiltForSpa) {
-      window.history.replaceState({}, '', this.queryPath);
+      window.history.pushState({}, '', this.queryPath);
     } else {
-      window.location.hash = this.queryPath;
+      window.history.pushState({}, '', `#${this.queryPath}`);
     }
+
+    document.title = `Pelias Compare Tool: ${this.text || this.ids || this.point}`;
 
     this.$forceUpdate();
   }
