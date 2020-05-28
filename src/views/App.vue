@@ -170,7 +170,7 @@ label {
         ref="pointModal"
         :lat="pointLat"
         :lng="pointLng"
-        v-on:point-changed="pointChanged"
+        v-on:point-changed="updatePoint"
       />
     </b-modal>
 
@@ -338,7 +338,7 @@ export default class CompareView extends Vue {
 
       const latlng = new L.LatLng(parseFloat(lat.trim()), parseFloat(lon.trim()));
 
-      this.pointStr = `${latlng.lng},${latlng.lat}`;
+      this.pointStr = `${latlng.lng.toFixed(6)}, ${latlng.lat.toFixed(6)}`;
       this.selectedPointOption = 'lng/lat';
 
       return latlng;
@@ -479,6 +479,11 @@ export default class CompareView extends Vue {
     }
 
     this.onChange();
+  }
+
+  updatePoint(point: L.LatLng) {
+    this.point = point;
+    this.pointChanged();
   }
 
   pointChanged() {
