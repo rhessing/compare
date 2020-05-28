@@ -189,7 +189,7 @@ function _renderjsonhelper(json, indent, dont_indent, show_level, options, path)
           as,
           _renderjson(
             options.replacer.call(json, i, json[i]),
-            indent + "    ",
+            indent + "  ",
             false,
             show_level - 1,
             options,
@@ -221,10 +221,10 @@ function _renderjsonhelper(json, indent, dont_indent, show_level, options, path)
       if (!(k in json)) continue;
       append(
         os,
-        themetext(null, indent + "    ", "key", '"' + k + '"', "object syntax", ": "),
+        themetext(null, indent + "  ", "key", '"' + k + '"', "object syntax", ": "),
         _renderjson(
           options.replacer.call(json, k, json[k]),
-          indent + "    ",
+          indent + "  ",
           true,
           show_level - 1,
           options,
