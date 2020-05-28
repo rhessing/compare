@@ -304,10 +304,7 @@ export default class CompareView extends Vue {
     }
     this.selectedPointOption = newOption;
 
-    console.log('pointOptionsChanged', newOption);
-
     if (this.pointStr) {
-      console.log(this.pointStr);
       this.onPointStringInputChange(this.pointStr);
     }
   }
@@ -476,14 +473,10 @@ export default class CompareView extends Vue {
     const [part1, part2] = parseToParts();
 
     if (this.selectedPointOption === LNG_LAT_OPTION) {
-      console.log('parsing as lnglat');
       this.point = new L.LatLng(part2, part1);
     } else {
-      console.log('parsing as latlng');
       this.point = new L.LatLng(part1, part2);
     }
-
-    console.log(this.point);
 
     this.onChange();
   }
