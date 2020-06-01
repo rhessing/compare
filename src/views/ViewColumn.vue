@@ -157,6 +157,7 @@ import {
   faDotCircle,
   faMapSigns,
   faLanguage,
+  faCrosshairs,
 } from '@fortawesome/free-solid-svg-icons';
 import { faWeebly } from '@fortawesome/free-brands-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -168,7 +169,7 @@ import '@/vendor/leaflet.awesome-markers.css';
 
 import ResultsSummary from './ResultsSummary.vue';
 
-const icons = [faWeebly, faDotCircle, faMapSigns, faLanguage, faMap, faObjectUngroup];
+const icons = [faWeebly, faDotCircle, faMapSigns, faLanguage, faMap, faObjectUngroup, faCrosshairs];
 icons.forEach((i) => library.add(i));
 
 function parseHTML(s: string) {
@@ -245,6 +246,10 @@ const markers = {
     icon: faObjectUngroup,
     markerColor: 'darkgreen',
   }),
+  focus: AwesomeMarkers.icon({
+    icon: faCrosshairs,
+    markerColor: 'cadetblue',
+  }),
 };
 
 @Component({
@@ -308,14 +313,7 @@ export default class ViewColumn extends Vue {
 
   addMarkers() {
     const geojson = this.body;
-    // add a red marker to map to indicate the focus centre point.
-    let focusPoint = null;
-    if (geojson?.data?.geocoding.query) {
-      const { query } = geojson.data.geocoding;
-      if (query && query['focus.point.lat'] && query['focus.point.lon']) {
-        focusPoint = { lon: query['focus.point.lon'], lat: query['focus.point.lat'] };
-      }
-    }
+
     // all custom icon logic
     const pointToLayer = function style(f: GeoJSON.Feature, latlon: L.LatLng) {
       let i = markers.default;
@@ -369,29 +367,31 @@ export default class ViewColumn extends Vue {
     };
 
     const style = (f: any) => f.properties;
-
-    if (geojson.data?.features) {
-      if (focusPoint) {
-        geojson.data.features.push({
-          type: 'Feature',
-          properties: {
-            'marker-color': 'blue',
-            icon: 'crosshairs',
-            gid: `lat: ${focusPoint.lat}, lon: ${focusPoint.lon}`,
-            label: 'focus.point',
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [focusPoint.lon, focusPoint.lat],
-          },
-        });
-      }
-    }
-
     L.geoJSON(geojson, {
       pointToLayer,
       style,
     }).addTo(this.getMap());
+
+    // add a red marker to map to indicate the focus centre point.
+    if (geojson?.geocoding.query) {
+      const { query } = geojson.geocoding;
+      if (query && query['focus.point.lat'] && query['focus.point.lon']) {
+        const focusPoint = new L.LatLng(query['focus.point.lat'], query['focus.point.lon']);
+
+        const marker = L.marker(focusPoint, {
+          title: `focus point: lat: ${focusPoint.lat}, lon: ${focusPoint.lng}`,
+          icon: markers.focus,
+        }).bindPopup(
+          `<p>
+          <strong style="font-size:14px">
+            Foucs point: lat: ${focusPoint.lat}, lon: ${focusPoint.lng}
+          </strong>
+          <br />
+        </p>`,
+        );
+        marker.addTo(this.getMap());
+      }
+    }
   }
 
   addBoundingBoxes() {
