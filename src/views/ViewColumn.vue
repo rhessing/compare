@@ -218,6 +218,10 @@ function renderjsonReplacer(key: string, value: string) {
     return makeLink(`https://www.geonames.org/${geonameId}`);
   }
 
+  if (typeof value === 'string' && (value.startsWith('http:') || value.startsWith('http://'))) {
+    return makeLink(value);
+  }
+
   return value;
 }
 
