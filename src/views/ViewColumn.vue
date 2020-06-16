@@ -179,7 +179,11 @@ function parseHTML(s: string) {
 }
 
 function renderjsonReplacer(key: string, value: string) {
-  const makeLink = (url: string, customText?: string) => parseHTML(`<a href="${url}">"${customText || value}"</a>`);
+  const makeLink = (url: string, customText?: string) => {
+    const a = parseHTML(`<a>"${customText || value}"</a>`);
+    (a as any).href = url;
+    return a;
+  };
 
   if (typeof value === 'string' && value.startsWith('whosonfirst:')) {
     const parts = value.split(':');
