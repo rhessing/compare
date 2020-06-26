@@ -304,6 +304,14 @@ export default class ViewColumn extends Vue {
           );
         },
       },
+      {
+        text: 'Look up in Pelias Spatial Service',
+        callback: ({ latlng }: { latlng: L.LatLng }) => {
+          window.open(
+            `https://spatial.demo.geocode.earth/explore/pip#12/${latlng.lat}/${latlng.lng}`,
+          );
+        },
+      },
       '-',
       {
         text: 'Reverse Geocode (coarse)',
