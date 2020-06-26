@@ -375,7 +375,6 @@ export default class ViewColumn extends Vue {
           icon: '<span>↕</span>',
           title: 'toggle taller map',
           onClick(btn, map) {
-            console.log('taller', faExpand);
             map.getContainer().classList.toggle('tall');
             if (map.getContainer().classList.contains('tall')) {
               // eslint-disable-next-line no-param-reassign
