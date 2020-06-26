@@ -122,7 +122,7 @@
         :center="center"
         :zoom="13"
         ref="mymap"
-        :options="{ scrollWheelZoom: false }"
+        :options="mapOptions"
       >
         <l-tile-layer :url="tileUrl" :attribution="attribution" />
       </l-map>
@@ -166,6 +166,9 @@ import { latLng } from 'leaflet';
 
 import AwesomeMarkers from '@/vendor/leaflet.awesome-markers';
 import '@/vendor/leaflet.awesome-markers.css';
+
+import 'leaflet-contextmenu/dist/leaflet.contextmenu';
+import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
 
 import ResultsSummary from './ResultsSummary.vue';
 
@@ -276,6 +279,32 @@ export default class ViewColumn extends Vue {
 
   private summary = '';
 
+  mapOptions = {
+    contextmenu: true,
+    contextmenuWidth: 140,
+    contextmenuItems: [
+      {
+        text: 'Search OSM',
+        callback: ({ latlng }: { latlng: L.LatLng }) => {
+          window.open(`https://www.openstreetmap.org/query?lat=${latlng.lat}&lon=${latlng.lng}#map=15/${latlng.lat}/${latlng.lng}`);
+        },
+      },
+      '-',
+      {
+        text: 'Reverse Geocode (coarse)',
+        callback: ({ latlng }: { latlng: L.LatLng }) => {
+          window.location.hash = `#/v1/reverse?point.lat=${latlng.lat}&point.lon=${latlng.lng}&layers=coarse`;
+        },
+      },
+      {
+        text: 'Reverse Geocode (fine)',
+        callback: ({ latlng }: { latlng: L.LatLng }) => {
+          window.location.hash = `#/v1/reverse?point.lat=${latlng.lat}&point.lon=${latlng.lng}`;
+        },
+      },
+    ],
+  };
+
   center = latLng(47.41322, -1.219482);
 
   tileUrl =
@@ -314,6 +343,18 @@ export default class ViewColumn extends Vue {
     (this.$refs.renderedJson as any).appendChild(renderjson(this.body, `response-${this.host}`));
     this.getMap().invalidateSize();
     this.centerFeatures(this.body.features);
+    // this.getMap().addHandler('contextmenu', {
+    //   contextmenu: true,
+    //   contextmenuWidth: 140,
+    //   contextmenuItems: [{
+    //     text: 'Show coordinates',
+    //     callback: (a: any) => console.log(a),
+    //   }, {
+    //     text: 'Center map here',
+    //     callback: (a: any) => console.log(a),
+    //   },
+    //   ],
+    // });
 
     this.addBoundingBoxes();
     this.addMarkers();
