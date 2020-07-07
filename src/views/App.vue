@@ -553,7 +553,7 @@ export default class CompareView extends Vue {
     // use the geocode.earth 'compare app' key
     // which has restrictive daily limits due to
     // frequent abuse.
-    return 'ge-5673e2c135b93a30';
+    return 'ge-1e618cf3d7bd023d';
   };
 
   onSubmit() {
