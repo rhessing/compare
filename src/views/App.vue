@@ -20,6 +20,24 @@ label {
   <b-container fluid>
     <b-row>
       <b-form v-on:submit.prevent="onSubmit" class="w-100 px-4 pb-4">
+        <div v-if="isStructured">
+          <b-form-group
+            :label="name"
+            label-for="input-text"
+            label-cols-sm="2"
+            v-for="(value, name) in structured"
+            :key="name"
+          >
+            <b-form-input
+              class="w-100"
+              id="input-text"
+              :placeholder="name"
+              v-model="structured[name]"
+              @change="onChange"
+            ></b-form-input>
+          </b-form-group>
+        </div>
+
         <b-form-group
           label="Query (text):"
           label-for="input-text"
@@ -152,7 +170,6 @@ label {
             <b-button type="submit" variant="primary">Submit</b-button>
           </div>
         </b-form-group>
-
       </b-form>
     </b-row>
 
@@ -191,6 +208,8 @@ import { faMap, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import BackToTop from 'vue-backtotop';
 
 import * as L from 'leaflet';
+
+import * as _ from 'lodash';
 
 /* eslint-disable global-require */
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
@@ -274,6 +293,18 @@ export default class CompareView extends Vue {
 
   private extraParams = '';
 
+  private structured: Record<string, string | undefined | null> = {
+    venue: undefined,
+    address: undefined,
+    neighbourhood: undefined,
+    borough: undefined,
+    locality: undefined,
+    county: undefined,
+    region: undefined,
+    postalcode: undefined,
+    country: undefined,
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private responses: any[] = [];
 
@@ -348,6 +379,11 @@ export default class CompareView extends Vue {
 
     this.point = parsePoint() || parsePoint('focus');
 
+    _.keys(this.structured).forEach((structuredKey) => {
+      this.structured[structuredKey] = params.get(structuredKey);
+      params.delete(structuredKey);
+    });
+
     this.extraParams = params.toString();
   }
 
@@ -413,6 +449,14 @@ export default class CompareView extends Vue {
   getParams() {
     const params = new URLSearchParams(`?${this.extraParams}`);
 
+    if (this.isStructured) {
+      _.forEach(this.structured, (value, key) => {
+        if (value) {
+          params.set(key, (value as unknown) as string);
+        }
+      });
+    }
+
     if (this.point && this.endpointUsesPoint) {
       if (this.endpointUsesFocus) {
         params.set('focus.point.lat', this.point.lat.toString());
@@ -450,7 +494,6 @@ export default class CompareView extends Vue {
     this.endpoint = v;
     this.onChange();
   }
-
 
   onPointStringInputChange(v: string) {
     const parseToParts = () => {
@@ -635,6 +678,10 @@ export default class CompareView extends Vue {
 
   get isPointRequired() {
     return this.endpoint === '/v1/reverse';
+  }
+
+  get isStructured() {
+    return this.endpoint === '/v1/search/structured';
   }
 
   get endpointUsesPoint() {
