@@ -23,14 +23,12 @@ label {
         <div v-if="isStructured">
           <b-form-group
             :label="name"
-            label-for="input-text"
             label-cols-sm="2"
             v-for="(value, name) in structured"
             :key="name"
           >
             <b-form-input
               class="w-100"
-              id="input-text"
               :placeholder="name"
               v-model="structured[name]"
               @change="onChange"
@@ -181,6 +179,7 @@ label {
         :body="response.body"
         :host="response.host"
         :numHosts="hosts.length"
+        :updateHash="updateHashFromChild"
       />
     </b-row>
 
@@ -387,16 +386,19 @@ export default class CompareView extends Vue {
     this.extraParams = params.toString();
   }
 
-  parseHash() {
-    // If we're running in non-SPA mode with routing like
-    // http://blackmad.github.io/pelias-compare/index.html#/v1/search?text=....
-    let hash = window.location.hash.substr(1);
+  getPathFromUrl(): string {
     // If we're running in SPA mode with routing like
     // http://localhost:8080/v1/search?text=San+Nicolas%2C+Peru&debug=0
     if (this.isBuiltForSpa && window.location.pathname.length > 1) {
-      hash = `/v1/${window.location.href.split('/v1/')[1]}`;
+      return `/v1/${window.location.href.split('/v1/')[1]}`;
     }
+    // If we're running in non-SPA mode with routing like
+    // http://blackmad.github.io/pelias-compare/index.html#/v1/search?text=....
+    return window.location.hash.substr(1);
+  }
 
+  parseHash(_hash: string) {
+    let hash = _hash;
     // As a hueristic, only decode as uri component if there's a uri
     // escaped question mark in there. Copy and pasting a path onto the
     // url hash string won't automatically do this
@@ -435,12 +437,12 @@ export default class CompareView extends Vue {
       }
     }
 
-    this.parseHash();
+    this.parseHash(this.getPathFromUrl());
 
     window.addEventListener(
       'hashchange',
       () => {
-        this.parseHash();
+        this.parseHash(this.getPathFromUrl());
       },
       false,
     );
@@ -475,8 +477,8 @@ export default class CompareView extends Vue {
       params.set('ids', this.ids);
     }
 
-    if (this.debug !== undefined) {
-      params.set('debug', this.debug ? '1' : '0');
+    if (this.debug !== undefined && this.debug) {
+      params.set('debug', '1');
     }
     return params;
   }
@@ -543,19 +545,31 @@ export default class CompareView extends Vue {
     this.onChange();
   }
 
+  updateHashFromChild(queryPath: string) {
+    this.parseHash(queryPath);
+
+    this.onSubmit();
+  }
+
+  updateHash(queryPath: string) {
+    if (this.isBuiltForSpa) {
+      window.history.pushState({}, '', queryPath);
+    } else {
+      window.history.pushState({}, '', `#${queryPath}`);
+    }
+
+
+    document.title = `Pelias Compare Tool: ${this.text || this.ids || this.point || this.endpoint}`;
+
+    this.$forceUpdate();
+  }
+
   onChange() {
     const params = this.getParams();
 
     this.queryPath = `${this.endpoint}?${params.toString()}`;
-    if (this.isBuiltForSpa) {
-      window.history.pushState({}, '', this.queryPath);
-    } else {
-      window.history.pushState({}, '', `#${this.queryPath}`);
-    }
 
-    document.title = `Pelias Compare Tool: ${this.text || this.ids || this.point}`;
-
-    this.$forceUpdate();
+    this.updateHash(this.queryPath);
   }
 
   get prettyExtraParams() {
