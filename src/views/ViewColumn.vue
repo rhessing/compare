@@ -637,7 +637,6 @@ export default class ViewColumn extends Vue {
   }
 
   get hasParsedQuery() {
-    console.log('has?', this.body?.geocoding?.query?.parsed_text);
     return this.body?.geocoding?.query?.parsed_text;
   }
 
