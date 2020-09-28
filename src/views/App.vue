@@ -131,7 +131,7 @@ label {
               >Off</b-form-radio
             >
             <b-form-radio v-model="debug" @change="onDebugChange" value="1"
-              >Basic</b-form-radio
+              >With Elastic Request</b-form-radio
             >
             <b-form-radio v-model="debug" @change="onDebugChange" value="2"
               >With Elastic Response</b-form-radio
