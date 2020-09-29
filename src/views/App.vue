@@ -125,10 +125,19 @@ label {
         </b-form-group>
 
         <div role="group" class="form-row form-group">
-          <label class="col-sm-2 col-form-label">Options</label>
-          <div class="bv-no-point-ring col flex">
-            <b-form-checkbox id="checkbox-debug" @change="onDebugChange" v-model="debug"
-              >Debug</b-form-checkbox
+          <label class="col-sm-2 col-form-label">Debug</label>
+          <div class="col-sm-10 d-flex flex-wrap">
+            <b-form-radio v-model="debug" @change="onDebugChange" value="0"
+              >Off</b-form-radio
+            >
+            <b-form-radio v-model="debug" @change="onDebugChange" value="1"
+              >With Elastic Request</b-form-radio
+            >
+            <b-form-radio v-model="debug" @change="onDebugChange" value="2"
+              >With Elastic Response</b-form-radio
+            >
+            <b-form-radio v-model="debug" @change="onDebugChange" value="3"
+              >With Elastic Explain</b-form-radio
             >
           </div>
         </div>
@@ -286,7 +295,7 @@ export default class CompareView extends Vue {
 
   private autocomplete = false;
 
-  private debug = true;
+  private debug = '1';
 
   private queryPath = '';
 
@@ -347,7 +356,7 @@ export default class CompareView extends Vue {
     this.endpoint = parts[0];
     const params = new URLSearchParams(parts[1]);
 
-    this.debug = params.get('debug') === '1';
+    this.debug = params.get('debug') || '0';
     params.delete('debug');
 
     this.text = params.get('text');
@@ -477,15 +486,15 @@ export default class CompareView extends Vue {
       params.set('ids', this.ids);
     }
 
-    if (this.debug !== undefined && this.debug) {
-      params.set('debug', '1');
+    if (this.debug !== undefined && this.debug && this.debug !== '0') {
+      params.set('debug', this.debug);
     }
     return params;
   }
 
   // We need this because checkboxes don't seem to sync before calling change
   // unlike text fields
-  onDebugChange(v: boolean) {
+  onDebugChange(v: string) {
     this.debug = v;
     this.onChange();
   }
