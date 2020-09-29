@@ -567,7 +567,6 @@ export default class CompareView extends Vue {
       window.history.pushState({}, '', `#${queryPath}`);
     }
 
-
     document.title = `Pelias Compare Tool: ${this.text || this.ids || this.point || this.endpoint}`;
 
     this.$forceUpdate();
