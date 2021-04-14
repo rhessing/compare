@@ -6,9 +6,11 @@ ARG DOWNLOAD_URL="https://github.com/rhessing/compare/archive/refs/heads/master.
 WORKDIR /usr/local/app
 
 RUN apk --update add wget unzip && \
-	cd /usr/local/app && \
+	cd /usr/local && \
+	wget --no-check-certificate ${DOWNLOAD_URL} && \
 	unzip compare-master.zip && \
-	cd compare-master && \
+	mv compare-master app && \
+	cd app && \
 	yarn build
 
 EXPOSE 80
