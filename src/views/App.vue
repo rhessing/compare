@@ -442,7 +442,7 @@ export default class CompareView extends Vue {
       if (this.isBuiltForApi) {
         this.hosts = createTags([`${window.location.protocol}//${window.location.host}`]);
       } else {
-        this.hosts = createTags(['https://api.geocode.earth', 'https://api.dev.geocode.earth']);
+        this.hosts = createTags(['http://pelias-api.lab.test.dsg-internal']);
       }
     }
 
