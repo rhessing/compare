@@ -352,10 +352,10 @@ export default class ViewColumn extends Vue {
   center = latLng(47.41322, -1.219482);
 
   tileUrl =
-    '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
+    '//osm-tile.descartes.com/osm_tiles/{z}/{x}/{y}.png';
 
   attribution =
-    'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>';
+    'DSG | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap</a>';
 
   centerFeatures(features: GeoJSON.FeatureCollection) {
     const geoJsonLayer = L.geoJSON(features);
@@ -378,7 +378,7 @@ export default class ViewColumn extends Vue {
     // jawg url is specified with "//" which fails when loading built index.html
     // as a file
     if (window.location.protocol === 'file:' && !this.tileUrl.includes('http:')) {
-      this.tileUrl = `http:${this.tileUrl}`;
+      this.tileUrl = `https:${this.tileUrl}`;
     }
 
     const isDebug = Boolean(this.body?.geocoding?.debug);
