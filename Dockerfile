@@ -9,7 +9,7 @@ RUN apk --update add wget unzip && \
 	cd /usr/local && \
 	wget --no-check-certificate ${DOWNLOAD_URL} && \
 	unzip master.zip && \
-	mv master app && \
+	mv compare-master app && \
 	cd app && \
 	yarn build
 
