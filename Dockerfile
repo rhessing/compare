@@ -8,8 +8,8 @@ WORKDIR /usr/local/app
 RUN apk --update add wget unzip && \
 	cd /usr/local && \
 	wget --no-check-certificate ${DOWNLOAD_URL} && \
-	unzip compare-master.zip && \
-	mv compare-master app && \
+	unzip master.zip && \
+	mv master app && \
 	cd app && \
 	yarn build
 
