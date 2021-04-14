@@ -24,9 +24,9 @@ export default class PointView extends Vue {
 
   defaultCenter = latLng(47.41322, -1.219482);
 
-  url = '//{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=t6fAKnvaPdPCucraY88YwlKjBfUHqBMvvZBIWlcp1Z9Z5FVtA02uWo6Dc9DGB2JO';
+  url = '//osm-tile.descartes.com/osm_tiles/{z}/{x}/{y}.png';
 
-  attribution = 'Map &copy; <a href="http://jawg.io" target="_blank" class="jawg-attrib"><b>Jawg</b>Maps</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap contributors</a>';
+  attribution = 'DSG | Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" class="osm-attrib">OpenStreetMap</a>';
 
   pointLatLng: L.LatLng | null = null;
 
