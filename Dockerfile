@@ -13,6 +13,4 @@ RUN apk --update add wget unzip && \
 	yarn install && \
 	yarn build
 
-EXPOSE 80
-
 CMD [ "yarn", "serve" ]
