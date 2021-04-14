@@ -10,6 +10,7 @@ RUN apk --update add wget unzip && \
 	unzip master.zip && \
 	mv compare-master/* /usr/local/app/ && \
 	cd /usr/local/app && \
+	yarn install && \
 	yarn build
 
 EXPOSE 80
