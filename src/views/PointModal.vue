@@ -20,7 +20,7 @@ import { latLng } from 'leaflet';
 
 @Component({})
 export default class PointView extends Vue {
-  zoom = 10;
+  zoom = 4;
 
   defaultCenter = latLng(47.41322, -1.219482);
 
